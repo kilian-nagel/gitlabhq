@@ -35,6 +35,7 @@ describe('RunnerRunningJobBadge', () => {
   let runnerRunningJobHandler;
 
   const findBadge = () => wrapper.findComponent(RunnerJobStatusBadge);
+  const findLink = () => wrapper.findByTestId('runner-running-job-link');
 
   const createComponent = ({ jobExecutionStatus = 'ACTIVE' } = {}) => {
     wrapper = shallowMountExtended(RunnerRunningJobBadge, {
@@ -64,31 +65,32 @@ describe('RunnerRunningJobBadge', () => {
 
     it('displays the job status badge without a link', () => {
       expect(findBadge().props('jobStatus')).toBe('IDLE');
-      expect(findBadge().attributes('href')).toBeUndefined();
+      expect(findLink().exists()).toBe(false);
     });
   });
 
   describe('when the runner is active', () => {
-    it('displays the badge without a link while loading', () => {
+    it('displays the badge without a job link while loading', () => {
       runnerRunningJobHandler.mockReturnValue(new Promise(() => {}));
       createComponent();
 
       expect(runnerRunningJobHandler).toHaveBeenCalledWith({ id: mockRunnerId });
       expect(findBadge().props('jobStatus')).toBe('ACTIVE');
-      expect(findBadge().attributes('href')).toBeUndefined();
+      expect(findLink().exists()).toBe(false);
     });
 
-    it('links the badge to the running job', async () => {
+    it('displays a link to the running job', async () => {
       createComponent();
       await waitForPromises();
 
       expect(findBadge().props('jobStatus')).toBe('ACTIVE');
-      expect(findBadge().attributes('href')).toBe('/group/project/-/jobs/1234');
-      expect(findBadge().attributes('title')).toBe('Running job #1234: test-job');
-      expect(getBinding(findBadge().element, 'gl-tooltip')).toBeDefined();
+      expect(findLink().text()).toBe('Running job #1234: test-job');
+      expect(findLink().attributes('href')).toBe('/group/project/-/jobs/1234');
+      expect(findLink().attributes('title')).toBe('Running job #1234: test-job');
+      expect(getBinding(findLink().element, 'gl-tooltip')).not.toBeUndefined();
     });
 
-    it('displays the badge without a link when no running job is visible', async () => {
+    it('displays the badge without a job link when no running job is visible', async () => {
       runnerRunningJobHandler.mockResolvedValue({
         data: { runner: { id: mockRunnerId, jobs: { nodes: [] } } },
       });
@@ -96,16 +98,16 @@ describe('RunnerRunningJobBadge', () => {
       await waitForPromises();
 
       expect(findBadge().props('jobStatus')).toBe('ACTIVE');
-      expect(findBadge().attributes('href')).toBeUndefined();
+      expect(findLink().exists()).toBe(false);
     });
 
-    it('displays the badge without a link when the request fails', async () => {
+    it('displays the badge without a job link when the request fails', async () => {
       runnerRunningJobHandler.mockRejectedValue(new Error('Error!'));
       createComponent();
       await waitForPromises();
 
       expect(findBadge().props('jobStatus')).toBe('ACTIVE');
-      expect(findBadge().attributes('href')).toBeUndefined();
+      expect(findLink().exists()).toBe(false);
     });
   });
 });

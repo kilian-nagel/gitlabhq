@@ -1,5 +1,5 @@
 <script>
-import { GlTooltipDirective } from '@gitlab/ui';
+import { GlLink, GlTooltipDirective } from '@gitlab/ui';
 import { getIdFromGraphQLId } from '~/graphql_shared/utils';
 import { s__, sprintf } from '~/locale';
 import runnerRunningJobQuery from '../graphql/list/runner_running_job.query.graphql';
@@ -9,6 +9,7 @@ import RunnerJobStatusBadge from './runner_job_status_badge.vue';
 export default {
   name: 'RunnerRunningJobBadge',
   components: {
+    GlLink,
     RunnerJobStatusBadge,
   },
   directives: {
@@ -46,10 +47,7 @@ export default {
     },
   },
   computed: {
-    tooltip() {
-      if (!this.runningJob) {
-        return null;
-      }
+    runningJobText() {
       return sprintf(s__('Runners|Running job #%{jobId}: %{jobName}'), {
         jobId: getIdFromGraphQLId(this.runningJob.id),
         jobName: this.runningJob.name,
@@ -59,13 +57,17 @@ export default {
 };
 </script>
 <template>
-  <runner-job-status-badge
-    v-if="runningJob && runningJob.webPath"
-    v-gl-tooltip
-    :job-status="runner.jobExecutionStatus"
-    :href="runningJob.webPath"
-    :title="tooltip"
-    data-testid="runner-running-job-link"
-  />
-  <runner-job-status-badge v-else :job-status="runner.jobExecutionStatus" />
+  <div class="gl-contents">
+    <runner-job-status-badge :job-status="runner.jobExecutionStatus" />
+    <gl-link
+      v-if="runningJob && runningJob.webPath"
+      v-gl-tooltip
+      :href="runningJob.webPath"
+      :title="runningJobText"
+      class="gl-basis-full gl-truncate gl-text-sm"
+      data-testid="runner-running-job-link"
+    >
+      {{ runningJobText }}
+    </gl-link>
+  </div>
 </template>
