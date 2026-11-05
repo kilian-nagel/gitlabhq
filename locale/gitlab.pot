@@ -73549,6 +73549,9 @@ msgstr ""
 msgid "Runners|Running Jobs"
 msgstr ""
 
+msgid "Runners|Running job #%{jobId}: %{jobName}"
+msgstr ""
+
 msgid "Runners|Runs untagged jobs"
 msgstr ""
 

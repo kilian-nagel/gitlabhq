@@ -3,7 +3,7 @@ import RunnerStatusCell from '~/ci/runner/components/cells/runner_status_cell.vu
 
 import RunnerStatusBadge from '~/ci/runner/components/runner_status_badge.vue';
 import RunnerPausedBadge from '~/ci/runner/components/runner_paused_badge.vue';
-import RunnerJobStatusBadge from '~/ci/runner/components/runner_job_status_badge.vue';
+import RunnerRunningJobBadge from '~/ci/runner/components/runner_running_job_badge.vue';
 
 import {
   I18N_PAUSED,
@@ -20,7 +20,7 @@ describe('RunnerStatusCell', () => {
 
   const findStatusBadge = () => wrapper.findComponent(RunnerStatusBadge);
   const findPausedBadge = () => wrapper.findComponent(RunnerPausedBadge);
-  const findRunnerJobStatusBadge = () => wrapper.findComponent(RunnerJobStatusBadge);
+  const findRunnerRunningJobBadge = () => wrapper.findComponent(RunnerRunningJobBadge);
 
   const createComponent = ({ runner = {}, ...options } = {}) => {
     wrapper = shallowMount(RunnerStatusCell, {
@@ -36,7 +36,6 @@ describe('RunnerStatusCell', () => {
       stubs: {
         RunnerStatusBadge,
         RunnerPausedBadge,
-        RunnerJobStatusBadge,
       },
       ...options,
     });
@@ -90,6 +89,8 @@ describe('RunnerStatusCell', () => {
       },
     });
 
-    expect(findRunnerJobStatusBadge().text()).toBe('Active');
+    expect(findRunnerRunningJobBadge().props('runner')).toMatchObject({
+      jobExecutionStatus: 'ACTIVE',
+    });
   });
 });

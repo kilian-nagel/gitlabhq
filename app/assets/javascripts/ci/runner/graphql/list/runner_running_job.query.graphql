@@ -1,0 +1,12 @@
+query getRunnerRunningJob($id: CiRunnerID!) {
+  runner(id: $id) {
+    id
+    jobs(statuses: [RUNNING], first: 1) {
+      nodes {
+        id
+        name
+        webPath
+      }
+    }
+  }
+}

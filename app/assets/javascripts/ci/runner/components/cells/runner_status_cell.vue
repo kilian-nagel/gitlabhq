@@ -3,14 +3,14 @@ import { GlTooltipDirective } from '@gitlab/ui';
 
 import RunnerStatusBadge from '../runner_status_badge.vue';
 import RunnerPausedBadge from '../runner_paused_badge.vue';
-import RunnerJobStatusBadge from '../runner_job_status_badge.vue';
+import RunnerRunningJobBadge from '../runner_running_job_badge.vue';
 
 export default {
   name: 'RunnerStatusCell',
   components: {
     RunnerStatusBadge,
     RunnerPausedBadge,
-    RunnerJobStatusBadge,
+    RunnerRunningJobBadge,
   },
   directives: {
     GlTooltip: GlTooltipDirective,
@@ -39,6 +39,6 @@ export default {
   <div class="gl-flex gl-flex-wrap gl-gap-2">
     <runner-status-badge :contacted-at="contactedAt" :status="status" />
     <runner-paused-badge v-if="paused" />
-    <runner-job-status-badge :job-status="runner.jobExecutionStatus" />
+    <runner-running-job-badge :runner="runner" />
   </div>
 </template>
