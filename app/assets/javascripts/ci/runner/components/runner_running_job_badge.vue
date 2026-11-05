@@ -64,7 +64,7 @@ export default {
       v-gl-tooltip
       :href="runningJob.webPath"
       :title="runningJobText"
-      class="gl-basis-full gl-truncate gl-text-sm"
+      class="gl-mt-3 gl-basis-full gl-truncate gl-text-sm"
       data-testid="runner-running-job-link"
     >
       {{ runningJobText }}
